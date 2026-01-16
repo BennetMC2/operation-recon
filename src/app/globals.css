@@ -1,26 +1,223 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --trench-black: #050505;
+  --phosphor-green: #32CD32;
+  --combat-red: #FF0000;
+  --amber: #FFB000;
+  --terminal-dim: #1a3a1a;
+  --grid-line: rgba(50, 205, 50, 0.1);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--trench-black);
+  --color-foreground: var(--phosphor-green);
+  --font-mono: var(--font-jetbrains);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    @apply bg-[#050505] text-[#32CD32] font-mono overflow-x-hidden;
+    min-height: 100vh;
+  }
+
+  /* The CRT Scanline Overlay */
+  .crt-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(
+      rgba(18, 16, 16, 0) 50%,
+      rgba(0, 0, 0, 0.25) 50%
+    ), linear-gradient(
+      90deg,
+      rgba(255, 0, 0, 0.06),
+      rgba(0, 255, 0, 0.02),
+      rgba(0, 0, 255, 0.06)
+    );
+    background-size: 100% 4px, 3px 100%;
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  /* Subtle CRT Flicker */
+  .flicker {
+    animation: flicker 0.15s infinite;
+  }
+
+  @keyframes flicker {
+    0% { opacity: 0.98; }
+    50% { opacity: 1; }
+    100% { opacity: 0.99; }
+  }
+
+  /* Night Vision Filter for Food Photos */
+  .night-vision {
+    filter: sepia(100%) hue-rotate(60deg) brightness(0.8) contrast(1.2) grayscale(0.5);
+    border: 2px solid #32CD32;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+* {
+  box-sizing: border-box;
+}
+
+/* Text Glow Effect */
+.text-glow {
+  text-shadow:
+    0 0 5px var(--phosphor-green),
+    0 0 10px var(--phosphor-green),
+    0 0 20px var(--phosphor-green);
+}
+
+.text-glow-amber {
+  text-shadow:
+    0 0 5px var(--amber),
+    0 0 10px var(--amber);
+}
+
+.text-glow-red {
+  text-shadow:
+    0 0 5px var(--combat-red),
+    0 0 10px var(--combat-red);
+}
+
+/* Typewriter Cursor */
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.cursor-blink::after {
+  content: '█';
+  animation: blink 1s infinite;
+  margin-left: 2px;
+}
+
+/* Terminal Border */
+.terminal-border {
+  border: 1px solid var(--phosphor-green);
+  box-shadow:
+    0 0 5px rgba(50, 205, 50, 0.3),
+    inset 0 0 20px rgba(50, 205, 50, 0.05);
+}
+
+/* Tactical Button */
+.tactical-btn {
+  background: transparent;
+  border: 2px solid var(--phosphor-green);
+  color: var(--phosphor-green);
+  padding: 12px 24px;
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.tactical-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(50, 205, 50, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.tactical-btn:hover::before {
+  left: 100%;
+}
+
+.tactical-btn:hover {
+  background: rgba(50, 205, 50, 0.1);
+  box-shadow: 0 0 15px rgba(50, 205, 50, 0.4);
+}
+
+.tactical-btn:active {
+  transform: scale(0.98);
+}
+
+.tactical-btn-danger {
+  border-color: var(--combat-red);
+  color: var(--combat-red);
+}
+
+.tactical-btn-danger:hover {
+  background: rgba(255, 0, 0, 0.1);
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
+}
+
+/* Progress Bar / Ammo Gauge */
+.ammo-gauge {
+  background: rgba(50, 205, 50, 0.1);
+  border: 1px solid var(--phosphor-green);
+  position: relative;
+  overflow: hidden;
+}
+
+.ammo-gauge-fill {
+  background: linear-gradient(180deg, var(--phosphor-green), #1a6b1a);
+  transition: height 0.5s ease;
+  box-shadow: 0 0 10px var(--phosphor-green);
+}
+
+.ammo-gauge-danger .ammo-gauge-fill {
+  background: linear-gradient(180deg, var(--combat-red), #6b1a1a);
+  box-shadow: 0 0 10px var(--combat-red);
+}
+
+/* Grid Background */
+.tactical-grid {
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Input Styling */
+.tactical-input {
+  background: rgba(50, 205, 50, 0.05);
+  border: 1px solid var(--phosphor-green);
+  color: var(--phosphor-green);
+  padding: 12px 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 16px;
+  width: 100%;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.tactical-input:focus {
+  box-shadow: 0 0 10px rgba(50, 205, 50, 0.3);
+  background: rgba(50, 205, 50, 0.1);
+}
+
+.tactical-input::placeholder {
+  color: rgba(50, 205, 50, 0.4);
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--trench-black);
+  border: 1px solid var(--phosphor-green);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--phosphor-green);
+}
+
+/* Selection */
+::selection {
+  background: var(--phosphor-green);
+  color: var(--trench-black);
 }
