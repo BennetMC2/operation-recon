@@ -28,7 +28,7 @@ interface SearchResult {
 }
 
 export default function LogIntelModal({ isOpen, onClose, onAddFuel, recentFoods }: LogIntelModalProps) {
-  const [mode, setMode] = useState<InputMode>('photo');
+  const [mode, setMode] = useState<InputMode>('manual');
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -341,7 +341,6 @@ export default function LogIntelModal({ isOpen, onClose, onAddFuel, recentFoods 
   if (!isOpen) return null;
 
   const modeButtons = [
-    { id: 'photo' as InputMode, icon: Camera, label: 'VISUAL' },
     { id: 'barcode' as InputMode, icon: Barcode, label: 'BARCODE' },
     { id: 'search' as InputMode, icon: Search, label: 'SEARCH' },
     { id: 'manual' as InputMode, icon: PenLine, label: 'MANUAL' },
@@ -373,6 +372,10 @@ export default function LogIntelModal({ isOpen, onClose, onAddFuel, recentFoods 
               <X size={24} />
             </button>
           </div>
+
+          <p className="px-4 py-3 text-sm text-[#32CD32]/70" role="status">
+            Photo analysis is temporarily unavailable. Use barcode lookup, search or manual entry.
+          </p>
 
           {/* Mode selector */}
           <div className="flex border-b border-[#32CD32]/30">
